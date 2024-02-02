@@ -14,6 +14,24 @@ struct Contact(){
  char mail[30];
 };
 
+/********  Program Functions **********/
+void insertContact(Contact c);
+Contact readContact();
+bool existsContact(char name[],char family_name[]);
+Contact searchContact(char name[],char family_name[]);
+void showContact(Contact c);
+void listContacts();
+void removeContact(char name[],char family_name[]);
+void updateContact(char name[],char family_name[]);
+/***********************************/
+
+/********  Menu Functions **********/
+void menuInsertion();
+void menuSearching();
+void menuListing();
+void menuRemoval();
+void menuUpdate();
+/***********************************/
 
 void insertContact(Contact c){
     ofstream output;
@@ -135,6 +153,64 @@ void updateContact(char name[],char family_name[]){
     rename("temp.dat",DIR_FILE);
 
 }
+
+void menuInsertion(){
+  cout<<"\t\t\t - REGISTER NEW CONTACT" <<endl;
+  Contact newone = readContact();
+  if(existsContact(newone.name,newone.family_name)){
+    cout<<"CONTACT ALREADY EXISTS! REGISTRATION FAILED!"<<endl;
+  }
+  insertContact(newone);
+  cout<<"\t\t\t - CONTACT SUCCESFULLY REGISTERED" <<endl;
+}
+void menuSearching(){
+    cout<<"\t\t\t - SEARCH CONTACT" <<endl;
+    char name[30], family_name[30];
+    cout<<"\t\t\t - INSERT DATA FOR SEARCHING:" <<endl;
+    cout<<"\t\t\t - NAME:" ;
+    cin.getline(name,30);
+    cout<<"\t\t\t - LAST NAME:" ;
+    cin.getline(family_name,30);
+    if(existsContact(name,family_name)){
+            Contact searched = searchContact(name,family_name);
+            showContact(searched);
+    } else{
+
+       cout<<"CONTACT COULD NOT BE FOUND!"<<endl;
+
+    }
+
+}
+void menuListing(){
+    cout<<"\t\t\t - CONTACT LIST" <<endl;
+    listContacts();
+
+}
+void menuRemoval(){
+    cout<<"\t\t\t - REMOVE CONTACT" <<endl;
+    char name[30], family_name[30];
+    cout<<"\t\t\t - INSERT DATA FOR REMOVAL:" <<endl;
+    cout<<"\t\t\t - NAME:" ;
+    cin.getline(name,30);
+    cout<<"\t\t\t - LAST NAME:" ;
+    cin.getline(family_name,30);
+    if(existsContact(name,family_name)){
+            Contact eliminate = searchContact(name,family_name);
+            int decision;
+            cout<<"\t\t\t - ARE YOU SURE WANT TO REMOVE THIS CONTACT?" <<endl;
+            showContact(eliminate);
+            cout<<"\t\t\t - PRESS 1 FOR YES OR 2 FOR NO...";
+            cin>>decision;
+            if(decision==1){
+            removeContact(name,family_name);
+            cout<<"\t\t\t - CONTACT REMOVED!" <<endl;
+            }
+    }
+
+}
+void menuUpdate();
+
+
 
 int main(){
  listContacts();
