@@ -14,12 +14,6 @@ struct Contact(){
  char mail[30];
 };
 
-void insertContact(Contact c);
-Contact readContact();
-bool existsContact(char name[],char family_name[]);
-Contact searchContact(char name[],char family_name[]);
-void showContact(Contact c);
-
 
 void insertContact(Contact c){
     ofstream output;
@@ -100,14 +94,52 @@ void listContacts(){
    input.close();
 }
 
+void removeContact(char name[],char family_name[]){
+    ifstream input;
+    ofstream temp;
+    input.open(DIR_FILE,ios::binary);
+    temp.open("temp.dat",ios::binary);
+    Contact c;
+    if(input.good()){
+        while(input.read((char*)&c,sizeof(Contact))){
+          if(strcmp(name,c.name)!=0 || strcmp(family_name,c.family_name)!=0){
+            temp.write((char*)&c,sizeof(Contact));
+
+          }
+        }
+    }
+    input.close();
+    temp.close();
+    remove(DIR_FILE);
+    rename("temp.dat",DIR_FILE);
+}
+
+void updateContact(char name[],char family_name[]){
+    ifstream input;
+    ofstream temp;
+    input.open(DIR_FILE,ios::binary);
+    temp.open("temp.dat",ios::binary);
+    Contact c;
+    if(input.good()){
+        while(input.read((char*)&c,sizeof(Contact))){
+          if(strcmp(name,c.name)!=0 || strcmp(family_name,c.family_name)!=0){
+            Contact updated = readContact();
+            temp.write((char*)&updated,sizeof(Contact));
+
+          }
+        }
+    }
+    input.close();
+    temp.close();
+    remove(DIR_FILE);
+    rename("temp.dat",DIR_FILE);
+
+}
+
 int main(){
- if(existsContact("Jean","Rodriguez")){
-    Contact c = searchContact("Jean","Rodriguez");
-    showContact(c);
- }
- else{
-    cout<<"There is no such contact registered!"<<endl;
- }
+ listContacts();
+ removeContact("Teste1","Sobrenome1");
+ updateContact("Test2","Sobrenome2");
  listContacts();
  return 0;
 }
